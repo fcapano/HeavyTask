@@ -1,0 +1,13 @@
+menu "HeavyTask Configuration"
+
+    config HEAVY_TASK_ENABLED
+        bool "Run on separate task"
+        default y
+
+    config HEAVY_TASK_STACKSIZE
+        int "Heavy task stack size"
+        default 8192
+        help
+            Amount of stack available for the heavy task.
+
+endmenu
