@@ -17,7 +17,6 @@ static const int msg_queue_len = 5;
 // Globals
 static QueueHandle_t msg_queue;
 static SemaphoreHandle_t htSemaphore = NULL;
-static StaticSemaphore_t htMutexBuffer;
 
 // State
 static bool configured = false;
@@ -58,7 +57,7 @@ bool addLongTask(HeavyTask * ht)
 {
     if (!configured) {
         msg_queue = xQueueCreate(msg_queue_len, sizeof(HeavyTask *));
-        htSemaphore = xSemaphoreCreateMutexStatic(&htMutexBuffer);
+        htSemaphore = xSemaphoreCreateMutex();
         configASSERT( htSemaphore );
         configured = true;
     }
@@ -97,7 +96,7 @@ void abortLongTask(bool pause)
     }
     if (running && heavyTaskHandle) {
         running = false;
-        vTaskDelete(heavyTaskHandle);
+        vTaskDelete(*heavyTaskHandle);
         heavyTaskHandle = nullptr;
     }
     paused = pause;
